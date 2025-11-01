@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nestjs-app:latest
+    ports:
+      - "8080:8080"        # Menyambungkan port 3000 dari container ke port 3000 di host
+    environment:
+      NODE_ENV: production # Set environment variable
+      PORT: 8080           # Set port sesuai yang digunakan dalam aplikasi
+    volumes:
+      - .:/usr/src/app     # Menggunakan volume untuk pengembangan agar perubahan kode otomatis
+    networks:
+      - app-network
+
+  # Optional: Jika menggunakan database seperti PostgreSQL atau MongoDB, bisa ditambahkan di sini
+  # db:
+  #   image: postgres:latest
+  #   environment:
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_DB: database
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - app-network
+
+networks:
+  app-network:
+    driver: bridge
