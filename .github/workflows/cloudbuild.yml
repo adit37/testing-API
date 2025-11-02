@@ -1,0 +1,43 @@
+# ===============================================
+# Google Cloud Build configuration for testing-API
+# Build and deploy Node.js app to Cloud Run
+# ===============================================
+
+steps:
+  # 1️⃣ Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/testing-api', '.']
+
+  # 2️⃣ Push image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/testing-api']
+
+  # 3️⃣ Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: 'gcloud'
+    args:
+      [
+        'run', 'deploy', 'testing-api',
+        '--image', 'gcr.io/$PROJECT_ID/testing-api',
+        '--region', 'asia-southeast1',
+        '--platform', 'managed',
+        '--port', '8080',
+        '--allow-unauthenticated',
+        '--set-env-vars',
+        'DATABASE_URL=${_DATABASE_URL},PROJECT_ID=${_PROJECT_ID},PRIVATE_KEY=${_PRIVATE_KEY},CLIENT_EMAIL=${_CLIENT_EMAIL},STORAGE_MEDIA_BUCKET=${_STORAGE_MEDIA_BUCKET}'
+      ]
+
+# Output image (for UI traceability)
+images:
+  - 'gcr.io/$PROJECT_ID/testing-api'
+
+# 4️⃣ Variable substitutions (secret/env injection)
+substitutions:
+  _DATABASE_URL: "mysql://root:fIQbyG+M3PEjlDB2@34.143.237.194:3306/db_fontfound_api"
+  _PROJECT_ID: "crypto-talon-441814-g9"
+  _PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC2KfqFqk+d/RQP\\n0syiP3/UAYh3Jit29C2sL1w/zCO6yqaLNSv45HjudFihbXpDY84C3mnHeR8j5yLA\\nkTC6GduiSnk968VPwUutjjzzjNW/13i1z+sYmp3Rla3VLsZ94IJpg2qRgSSp7RC5\\ncVAqhUYljj3QfXX9qr051QjP+eo/QFpuPn8B86h9/szI90Cd4QGZ3ySHIaXqxLEW\\n10fhGhzxju5NVZFLS4dfstjP6yMUv2bUju7gChWRrZqC1qBIIy7KRJZkpOyWGb3n\\nf7BTX+3lByfVlgnj2R+jVmmIYYqqC1PbMwibCoVsQc/5SEAuR0ZADjrnqs0EWq5H\\nXMoo/zeFAgMBAAECggEAHhMJ0Rs1lXlMtcdme8ZCWzo85qLuxm74wrZ3o0bCLVq7\\nVTycO7VeASGZ57N/Mx9dSdxLbXXMk4Jbmpw92wkILvU0VWnr7kdqMEdNPnkQFGHw\\nBArwHuSZTUVKE5SV4P6kY+Qg6iXT65lVILCZp3N6XxqVOlXEREgggSrv5K+MzLqS\\naZEzJvw4r92CGkPq47sSFB7hvVSwLYpk9z/ITETHbq22OsYGkViz3P4XhGjHoEqA\\nPoke36/k1NZxUb7zsOHjrC3QcmfSIXi27QTBmyRYylfDsqj78ns5PtP0nc4mB7mb\\nq+8ZizzLk9LgpO0ACXDMaXUxSbzFToMvp6GRccRrHwKBgQDFy7EXHchOA3l2qLze\\nH9uLTB3JxhOBacgAy0QPiEAyedwGoQWv27MdfnlkwJEKCOO2nx5FfIcOZM6ld0TA\\nFXdvPYja/7TtmjbMIxp2SvwvSuAjw2J3DaaAPe4UhWOUxRLJzTpS32ZF5p3nxDSo\\nejs4kYcIkl+ACZvKqsl0SNFvxwKBgQDrxLkW28HWIgbhipmjIu8qtmvahbiSNgaW\\nHJuIGMD4IuWnidM69iIMV50PEO8hBaf6XfQdwiJ6XRqPwlK2V8m5d6oH+jIgJhCH\\nP0RF3IJEkug5fWbZx2LmZDU8MZy7jBqGllzOHF9Zk7kehisrwTrQQ/e+HJpQJa5p\\n5lPALFw2UwKBgQDBQzSGlLgZ2fU9hsP7+X7HjZjxhROb+GLOu82Fq6imaUEeTQlE\\nelN59xDf6/QLrQHqd3DZjkJcQw1SycWoNZFcZPCqov0CyBLQxV/ew4fDIdL9vrQg\\nBXtxhJFzBZ52R1UDTv606MmCdUJGqgSVtdDVhgQ90N91OG47yUJL17akEwKBgBvI\\ni/M4pGgCjIMJnT9PP5Xt91nCBlUcjrwj1OQ93oefPSb4I+8/0BVaQcTjvvpKO1hS\\nuBDFruBylk24nZylTb1Qb7YO8tc9BRebCgWdjbBdC4ay02r4hxwVVPyp8Ald4kZX\\n88nKKCZbNSZ2syGt3KtsRwadQkYNmrcaEGaGE7vHAoGBAKlDsUSAhY7CePNrhdVk\\nzxTw0aUr/RoOUVh4fGU3XKujcx5ubyn5R68EWuj5mzibLBxRAMR31AXXiVdbS5m4\\n+T3d3B5vda0PK1HOeoyDYPQrsfrvHhSiyA5E6Q558cpgThxMopykNHF4zot62jAj\\ncOqBcxlY0Ak1F8uXiBtcZBkY\\n-----END PRIVATE KEY-----\\n"
+  _CLIENT_EMAIL: "crypto-talon-441814-g9@appspot.gserviceaccount.com"
+  _STORAGE_MEDIA_BUCKET: "crypto-talon-441814-g9.appspot.com"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
