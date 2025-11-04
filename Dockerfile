@@ -2,7 +2,11 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM node:18-alpine AS development
+FROM node:20-slim AS development
+# gunakan node:20-slim, bukan alpine → agar ada libssl bawaan
+
+# Install utilitas & dependensi sistem (termasuk OpenSSL)
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # Set WORKDIR untuk aplikasi
 WORKDIR /usr/src/app
@@ -19,6 +23,9 @@ RUN npm ci
 # Salin seluruh kode sumber
 COPY --chown=node:node . .
 
+# Generate Prisma Client sesuai OS Linux
+RUN npx prisma generate
+
 # Gunakan user "node"
 USER node
 
@@ -26,7 +33,9 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:18-alpine AS build
+FROM node:20-slim AS build
+
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # Set WORKDIR
 WORKDIR /usr/src/app
@@ -52,6 +61,8 @@ ENV NODE_ENV=production
 # Install hanya dependencies production
 RUN npm ci --only=production && npm cache clean --force
 
+RUN npx prisma generate
+
 # Gunakan user "node"
 USER node
 
@@ -59,7 +70,9 @@ USER node
 # PRODUCTION
 ###################
 
-FROM node:18-alpine AS production
+FROM node:20-slim AS production
+
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # Set WORKDIR
 WORKDIR /usr/src/app
