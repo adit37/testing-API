@@ -12,7 +12,7 @@ export class AppService {
     try {
       const data = await this.prisma.records.findMany({
         orderBy: {
-          created_at: 'desc',
+          createdAt: 'desc',
         },
       });
   
@@ -37,7 +37,7 @@ export class AppService {
           device_id: id,
         },
         orderBy: {
-          created_at: 'desc',
+          createdAt: 'desc',
         },
       });
   
