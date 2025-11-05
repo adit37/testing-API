@@ -1,6 +1,6 @@
 # ===============================================
-# Google Cloud Build configuration for testing-API
-# Build and deploy Node.js app to Cloud Run
+# GOOGLE CLOUD BUILD PIPELINE for testing-API
+# Build, Deploy, and Load Test using k6
 # ===============================================
 
 steps:
@@ -23,15 +23,42 @@ steps:
         '--platform', 'managed',
         '--port', '8080',
         '--allow-unauthenticated',
+        '--cpu', '2',
+        '--memory', '1Gi',
+        '--concurrency', '80',
+        '--timeout', '180',
+        '--min-instances', '1',
+        '--max-instances', '10',
         '--set-env-vars',
         'DATABASE_URL=${_DATABASE_URL},PROJECT_ID=${_PROJECT_ID},PRIVATE_KEY=${_PRIVATE_KEY},CLIENT_EMAIL=${_CLIENT_EMAIL},STORAGE_MEDIA_BUCKET=${_STORAGE_MEDIA_BUCKET}'
       ]
 
-# Output image (for UI traceability)
+  # 4️⃣ Jalankan k6 load test (langsung terhadap URL Cloud Run)
+  - name: 'grafana/k6'
+    entrypoint: 'k6'
+    args:
+      [
+        'run',
+        '--out', 'json=results.json',
+        'k6-script.js'
+      ]
+    env:
+      - 'API_URL=https://testing-api-201098739954.asia-southeast1.run.app'
+
+  # 5️⃣ Upload hasil test ke Cloud Storage bucket
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: 'bash'
+    args:
+      [
+        '-c',
+        'gsutil cp results.json gs://${_STORAGE_MEDIA_BUCKET}/load-test-results/results-$(date +%Y%m%d-%H%M%S).json'
+      ]
+
+# 6️⃣ Informasikan image output untuk traceability
 images:
   - 'gcr.io/$PROJECT_ID/testing-api'
 
-# 4️⃣ Variable substitutions (secret/env injection)
+# 7️⃣ Substitutions (env secrets)
 substitutions:
   _DATABASE_URL: "mysql://api1:Root1234~@34.142.169.159:3306/db_testing-api"
   _PROJECT_ID: "crypto-talon-441814-g9"
