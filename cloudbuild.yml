@@ -33,18 +33,6 @@ steps:
         'DATABASE_URL=${_DATABASE_URL},PROJECT_ID=${_PROJECT_ID},PRIVATE_KEY=${_PRIVATE_KEY},CLIENT_EMAIL=${_CLIENT_EMAIL},STORAGE_MEDIA_BUCKET=${_STORAGE_MEDIA_BUCKET}'
       ]
 
-  # 4️⃣ Jalankan k6 load test (langsung terhadap URL Cloud Run)
-  - name: 'grafana/k6'
-    entrypoint: 'k6'
-    args:
-      [
-        'run',
-        '--out', 'json=results.json',
-        'k6-script.js'
-      ]
-    env:
-      - 'API_URL=https://testing-api-201098739954.asia-southeast1.run.app'
-
   # 5️⃣ Upload hasil test ke Cloud Storage bucket
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     entrypoint: 'bash'
@@ -60,11 +48,11 @@ images:
 
 # 7️⃣ Substitutions (env secrets)
 substitutions:
-  _DATABASE_URL: "mysql://api1:Root1234~@34.142.169.159:3306/db_testing-api"
-  _PROJECT_ID: "crypto-talon-441814-g9"
-  _PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCbeQcIjQg1jfuw\nhDf1J9rcESGPxqR0K/eLE4p0+4c8fAYbBV3Mb+ZC+6fVWl0CAoJ2MvJv1PHVGX4B\npYL1S3wKZjtnaSsGlDj8PKKVj12bXYDxa4tKIUSGzQtDJHUNaA+0JH5RV27/RwPA\n52qqPM59z7x65HN921m5kxGMN8g+Gab9fvUvFQZ8OyTZxy2MhwE+ApeWAas6O5sY\nG2h642DFjy5jcEtta11W1ViSIPqIQ0Rvx7/MiG+PSbI5lFxndCaTx7GRf8G9ruXA\n+g9X5wehFc1IhhkXgoFVuTPgS6bxrRv279MbqxvuxURyD1kYElSnJ1YA0+D+n3p+\nAqvFXkNBAgMBAAECggEAJFoOinHLXxZFKLcpjFFWy4jX45GrJxyWozac85BSRRKs\nrMm67k+ls7i6u9iGka87iN6NsBdGujBdNY5ZCfit1pKjxiChdkbW8idNTpH4bZjV\nytz98wXHS4uK3BacpddUgKbdwDAk3Fxi5MpXNtnD4Effxo4+8MkGeC0Kd9IdKGOi\nXRD3MFsLH06Lmsf2Fw1ms0C5xou0SIYX57CkmZWzlMR5hy+wPQymZ0/Mn5XcbeR5\nSv/Cn9kfz3uBwMfy5vBWKdalQqn4QadorxzZZd8wkbPYSDsY2GyYLgYNiwTezref\nYnziphplYkNznGh5rkLXUMz90rlp9RHGRy5S/TxahwKBgQDbsP5Ok4wuxgwrXQAV\n1XM5277oM46iHC5VztOPm8eBB+uZccR/wNNUDquUDOEhueyPNhrDmCGHPax9wxEt\nHl1H6Zoyh0ad4VB02ivRYWAQluzS5XNIUUi8cBD0e7bdp0Ee4dIqKr63p8xJYAjJ\n3zg5bHNNNhFxxH9oDFYKKrFaGwKBgQC1KvvsPiAYFXLhCmE4KJ9KG8xVl3ekHYCp\np0LyhTT21FmxZo/Y3CI7axfAPLxVijQSkHB4/9s27cem4Umtp4J9kH6wAm0Dwelf\ntdr9I3uJ8MjXb587M62tGM7nsQ5YPuD/j8C2Nun6VMZYiVlyVTPLD7q2/np8SIn8\nDum3GrLt0wKBgQCqf4x+EwiibFWZec3NJCEO8DoTH6A8s75KHgAW3gFRZII2ThMA\nSvg3rkL+3ZgDgrXS11yiG/k5amXqHG/CImSmoOdo+4+Ui/7TEVccYoQZm+gkLKrx\nnxPiGt8tvq3HDDz/6KYgz5fAFNv4vi1T7odGGaLKc4HKV4PBjoFf1o5ZrQKBgDzr\nxWc9xOEUZVsTeHm//0CWdHHby1meqiNioXqYHKVb5wVmrbyI2eINMyFryxEgtj3/\n4DJwJzEjaF3PqE0C5TiAHHnndu0qieWra4ZwJhzOoVsAqBTqXd61Vu5GdcJq8pI9\nrtoXQTrywvgGx9NQn2gLVAgxLtMYOX5PLXxrN/wNAoGAQ2L+lASyp6lrBGOej+6h\n5jV+HcvVHR3/U6WhJj+e52i6wt3aYGmM5i/FFQ4P0jJVNl8tTyQtR1N4lQjFYTH4\n+meIMIiaFHKzVDKW8o+Sjxgnx4ebyIdfEuZGYAl2iBpVPxS7sTu9L+8HDB13zzuj\njcjhIrHwYfA7sXQoHgsPHa0=\n-----END PRIVATE KEY-----\n"
-  _CLIENT_EMAIL: "cicd-fontfound-gcr@crypto-talon-441814-g9.iam.gserviceaccount.com"
-  _STORAGE_MEDIA_BUCKET: "bucker-endpoint-api-fontfound"
+  _DATABASE_URL: "mysql://mysql1:Root1234~@34.124.255.133:3306/db_testing-api"
+  _PROJECT_ID: "font-found-490405"
+  _PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4tJXxLqsN8UAT\nnj/0GnFZqzpZgy/dEZnLmIzJujqVXR7syjWp8o7g+WizhGuC5YBu9VaiGT7Xxv8/\nn0X0BrPM/35GD2vdP+jjlSMDgocsyiWcH/gagk491UFX9f/RDOEiaxrwP9hvRFd+\nw1k1jWHCuLakJDKUG6kSxfmzZwriUhOEQL2OHrMUU3rW7z/VQGhzzGIkRWqb0deO\ne7JCHKilrLMJG+9M5qPpo0GoI0l5gce0EjGqlJ3BDgf1lGKtB44aGyI30rmYIvZ5\nmwGqkrKj4Og3AkSehQ308py1Xx/YP4+bCMLoV9orXKYacnd/bbgsBkTr4HreP4s6\nc0l4Dgi3AgMBAAECggEAFG3AwcawG6ApvqG7oBOGouzJzNmyIwjN0lNiivNChH+i\nqnzo942A2Qgs2OIWBAm/LUaMWOxi43m6hH5ovcc5/rvpavVMsFFfwEAf+cTnj4Ai\nLcTpa4ErBzK9ge2O6D+87NIcziK5nQDZjocrqD0laWSFqtzoDTKL/iwQZJPKg+Jw\noPSqomQjrI9+5LGr0KaLEwzGsiVFWCs5TCzseTblQo2Mf2qHtCRgrdnT4BaccjX2\nPOTB/0lriAkFtGy5plSbhGCZ0qMXNZwc0HBV5/GhdIymlIm6B85hDfkuLAW2yZOt\nqIlHzO9At6vRb848AhfEg06S/FvnvNyidjaBxmJ23QKBgQD0apswm/6fPpJRmvGo\n7/BkzDsbtnLoMBQg85WT7EPYXzcb+W/xPjg/D1THwEWdtf1fGi2nWAuihOFvQN2J\nOSk3HOJopYAr6zKmLcvjBcxYAYtsnbHUgp4YQeayC3nq3v9pQwlVkHEmWkMpR7j/\nRujsl2DNC0mPgjukXE8usHpJHQKBgQDBdYhkhdBmB533+if86sYt358zAc3vqRXe\nCnEfnpsdUo/4d/I8KEidY2RLZTVvIS7RbdWIv8sMqngmcAGYuyXqmY0ObnXgYeUe\n4oodTzLoCiV7Rjx7JQRv8GKQOcQM5T6NW5WslvV+wTSSigReBWwIqO7rLJRNbVfS\notgDXinE4wKBgQDxWsRcv+4zukoqo2K3fBhasQI9X3EgrzlxQJgYNlrYs01sJmjQ\nRKyuOKlzhv43upq06tjiQyNaHPWwMtGQzA1TCwbYZ3Wl6N9fEiIf0H30+bGAVEhi\nnYkYUxtH/eUqdYKpozT4dWYGhWOEw/p+ursPxnwkflzphaT3rN/ULxjSUQKBgAKA\nEV4zOIlJCeqdigzDwAHxxO301QOG7OhsvB+Lfje3zHKKok/SuXWHRlGPIkyoYiGE\nyOC2kdo9DcZ5ZhviN1A74c3Q8acPvNVUWjKcxmynTOq18qwow1DrC2sPxA/impdb\nGqkbXlrgBlzqebn5WfcWr9fMQLJreloXjrEkc2e/AoGAEzDMBXZzDqdyV6g2vxOq\nDlQBqfAWNqkPfsfTGHR8Ie58yzmT9ax3q3mtkkZP2a0fX08Hb4EnnbdX17Rfm7gM\nnuJY1nFue0EAxnv1C2+PmmZ86KeWfB0xwW/A106R9eass4kek2e/ryIOFRcWZpGq\ns6VhWcWlrFf5SgDzSMV4qNo=\n-----END PRIVATE KEY-----\n"
+  _CLIENT_EMAIL: "font-found@font-found-490405.iam.gserviceaccount.com"
+  _STORAGE_MEDIA_BUCKET: "bucket_font_found"
 
 options:
   logging: CLOUD_LOGGING_ONLY
