@@ -29,8 +29,8 @@ steps:
         '--timeout', '180',
         '--min-instances', '1',
         '--max-instances', '10',
-        '--set-env-vars',
         '--add-cloudsql-instances', 'font-found-490405:asia-southeast1:mysql1',
+        '--set-env-vars',
         'DATABASE_URL=${_DATABASE_URL},PROJECT_ID=${_PROJECT_ID},PRIVATE_KEY=${_PRIVATE_KEY},CLIENT_EMAIL=${_CLIENT_EMAIL},STORAGE_MEDIA_BUCKET=${_STORAGE_MEDIA_BUCKET}'
       ]
 
