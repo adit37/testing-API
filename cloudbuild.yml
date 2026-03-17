@@ -43,7 +43,7 @@ steps:
         'gsutil cp results.json gs://${_STORAGE_MEDIA_BUCKET}/load-test-results/results-$(date +%Y%m%d-%H%M%S).json'
       ]
 
-# 6️⃣ Informasikan image output untuk traceability
+# 6️⃣ Informasikan image output untuk traceabilit
 images:
   - 'gcr.io/$PROJECT_ID/testing-api'
 
