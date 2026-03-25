@@ -11,12 +11,12 @@ run:
     port: 8080
   env:
     - name: DATABASE_URL
-      value: mysql://api1:Root1234~@34.142.169.159:3306/db_testing-api
+      value: mysql://root:Root1234@34.142.192.81:3306/db_testing-api
     - name: PROJECT_ID
-      value: crypto-talon-441814-g9
+      value: font-found-490405
     - name: CLIENT_EMAIL
-      value: cicd-fontfound-gcr@crypto-talon-441814-g9.iam.gserviceaccount.com
+      value: font-found@font-found-490405.iam.gserviceaccount.com
     - name: STORAGE_MEDIA_BUCKET
-      value: bucker-endpoint-api-fontfound
+      value: bucket_font_found
     - name: NODE_ENV
       value: production
