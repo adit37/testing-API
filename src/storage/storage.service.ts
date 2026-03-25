@@ -21,33 +21,53 @@ export class StorageService {
   }
 
   async save(
-    path: string,
-    contentType: string,
-    media: Buffer,
-    metadata: { [key: string]: string }[],
-  ) {
-    try {
-      const object = metadata.reduce(
-        (obj, item) => Object.assign(obj, item),
-        {},
+      path: string,
+      contentType: string,
+      media: Buffer,
+      metadata: { [key: string]: string }[],
+    ) {
+      try {
+        const object = metadata.reduce(
+          (obj, item) => Object.assign(obj, item),
+          {},
       );
+      
       const file = this.storage.bucket(this.bucket).file(path);
-      const stream = file.createWriteStream();
-      stream.on('finish', async () => {
-        return await file.setMetadata({
-          metadata: object,
+      
+      await new Promise((resolve, reject) => {
+        const stream = file.createWriteStream({
+          metadata: {
+            contentType,
+          },
         });
+        
+      stream.on('error', (err) => {
+        console.error('UPLOAD ERROR:', err);
+        reject(err);
       });
+      
+      stream.on('finish', async () => {
+        try {
+          await file.setMetadata({ metadata: object });
+          resolve(true);
+        } catch (err) {
+          reject(err);
+        }
+      });
+      
       stream.end(media);
-      return `https://storage.googleapis.com/bucket_font_found/${path}`;
-    } catch (error) {
+      });
+      
+      return `https://storage.googleapis.com/${this.bucket}/${path}`;
+      } catch (error) {
+      console.error('SAVE FAILED:', error);
       return {
         message: 'Failed to save media',
         error: error,
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-      };
+        };
+      }
     }
-  }
 
   async delete(path: string) {
     await this.storage
