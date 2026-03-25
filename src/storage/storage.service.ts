@@ -61,11 +61,7 @@ export class StorageService {
       return `https://storage.googleapis.com/${this.bucket}/${path}`;
       } catch (error) {
       console.error('SAVE FAILED:', error);
-      return {
-        message: 'Failed to save media',
-        error: error,
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        };
+      throw new Error('Upload failed');
       }
     }
 
