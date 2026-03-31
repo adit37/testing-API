@@ -39,7 +39,7 @@ export class StorageService {
         });
       });
       stream.end(media);
-      return `https://storage.googleapis.com/bucker-endpoint-api-fontfound/${path}`;
+      return `https://storage.googleapis.com/bucket_font_found/${path}`;
     } catch (error) {
       return {
         message: 'Failed to save media',
