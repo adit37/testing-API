@@ -11,6 +11,7 @@ import {
 import { AppService } from './app.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage/storage.service';
+import { Delete } from '@nestjs/common';
 
 @Controller()
 export class AppController {
@@ -32,6 +33,11 @@ export class AppController {
   @Get('records/:id')
   async getRecordsByDeviceId(@Param('id') id: string) {
     return await this.appService.getRecordsByDeviceId(id);
+  }
+
+  @Delete('records/:id')
+  async deleteRecordsByDeviceId(@Param('id') id: string) {
+    return await this.appService.deleteRecordsByDeviceId(id);
   }
 
   @Post('records')
