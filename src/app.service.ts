@@ -78,4 +78,39 @@ export class AppService {
       };
     }
   }
+  
+    async deleteRecordsByDeviceId(deviceId: string) {
+    try {
+      const records = await this.prisma.records.findMany({
+        where: {
+          device_id: deviceId,
+        },
+      });
+  
+      // Hapus file di GCP
+      for (const record of records) {
+        if (record.image_url) {
+          const path = record.image_url.split('.com/')[1];
+          await this.storageService.delete(path);
+        }
+      }
+  
+      await this.prisma.records.deleteMany({
+        where: {
+          device_id: deviceId,
+        },
+      });
+  
+      return {
+        message: 'Successfully deleted records & files',
+        status: HttpStatus.OK,
+      };
+    } catch (error) {
+      return {
+        message: 'Failed to delete records',
+        error: error,
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
 }
