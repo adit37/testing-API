@@ -8,10 +8,7 @@ export class StorageService {
   private storage: Storage;
   private bucket: string;
 
-  constructor(
-  private prisma: PrismaService,
-  private storageService: StorageService,
-  ) {
+  constructor() {
     this.storage = new Storage({
       projectId: StorageConfig.projectId,
       credentials: {
